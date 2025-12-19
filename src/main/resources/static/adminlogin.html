@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+
+    <style>
+        /* Page center */
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            font-family: "Segoe UI", sans-serif;
+            margin: 0;
+        }
+
+        /* Login card */
+        .login-container {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            padding: 30px;
+            width: 320px;
+            border-radius: 18px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            text-align: center;
+            color: #fff;
+            animation: fadeIn 0.8s ease;
+        }
+
+        /* Heading */
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #ffeb3b;
+            text-shadow: 0 0 10px rgba(255,235,59,0.7);
+        }
+
+        /* Inputs */
+        .login-container input {
+            width: 100%;
+            padding: 12px 14px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+
+        /* Button */
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #00f260, #0575e6);
+            color: #000;
+            transition: all 0.3s ease;
+        }
+
+        .login-container button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0,242,96,0.6);
+        }
+
+        /* Message */
+        #msg {
+            margin-top: 15px;
+            font-weight: 600;
+            color: #ff5252;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+<div class="snow-container"></div>
+
+    <div class="login-container">
+    <h1> Chrima Chris Game </h1>
+        <h2>Admin Login</h2>
+
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+
+        <button onclick="login()">Login</button>
+
+        <p id="msg"></p>
+    </div>
+
+    <script>
+        function login() {
+            const u = username.value;
+            const p = password.value;
+
+            fetch(`/auth/login?username=${u}&password=${p}`, { method: "POST" })
+                .then(res => res.text())
+                .then(msg => {
+                    if (msg === "success") {
+                        window.location.href = "/admin.html";
+                    } else {
+                        document.getElementById("msg").innerText = msg;
+                    }
+                });
+        }
+    </script>
+    <script src="script.js"></script>
+
+</body>
+</html>

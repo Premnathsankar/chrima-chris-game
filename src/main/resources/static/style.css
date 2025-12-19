@@ -267,3 +267,22 @@ td {
     }
 }
 
+
+#taskForMeText {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    max-width: 100%;
+}
+
+#taskForMeText {
+    background: rgba(0,0,0,0.2);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+
+
+
+
+

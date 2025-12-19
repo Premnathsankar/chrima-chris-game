@@ -22,12 +22,13 @@ public class GameService {
 
     public String revealName(String phone) {
 
-        // check phone exists
         if (!playerRepository.existsByPhone(phone)) {
             return "Phone number not found. Contact admin.";
         }
 
-        Assignment assignment = assignmentRepository.findByGiverPhone(phone);
+        Assignment assignment = assignmentRepository
+                .findByGiverPhone(phone)
+                .orElse(null);
 
         if (assignment == null) {
             return "Game not started yet.";
@@ -37,10 +38,10 @@ public class GameService {
             return "🎁 You got: " + assignment.getReceiverName();
         }
 
-
         assignment.setRevealed(true);
         assignmentRepository.save(assignment);
 
         return "🎁 You got: " + assignment.getReceiverName();
     }
+
 }

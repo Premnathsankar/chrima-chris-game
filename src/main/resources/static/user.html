@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Chrima Chris - Game</title>
+    <title>Chrima Chris Game</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -10,13 +10,33 @@
 <body>
 <div class="snow-container"></div>
 <div class="container">
-    <h1> Chrima Chris Game</h1>
 
+    <h1> Chrima Chris Game </h1>
+
+    <!-- SECTION 1: REVEAL -->
     <div class="card">
+        <h2>Reveal Your Person</h2>
         <input type="text" id="userPhone" placeholder="Enter your phone number">
-        <button onclick="revealName()">Reveal</button>
-        <h2 id="result"></h2>
+        <button onclick="reveal()" >Reveal</button>
+        <p id="revealResult"></p>
     </div>
+
+    <!-- SECTION 2: ASSIGN TASK -->
+    <div class="card hidden" id="taskAssignSection">
+        <h2 id="assignTitle">Assign a Task</h2>
+        <textarea id="taskInput" placeholder="Enter task (can be empty)"></textarea>
+        <button onclick="assignTask()">Save Task</button>
+        <p id="assignMsg"></p>
+    </div>
+
+    <!-- SECTION 3: TASK FOR ME -->
+    <div class="card hidden" id="taskForMeSection">
+    <h2> Task Assigned to You</h2>
+    <p id="taskForMeText">No task assigned yet</p>
+    <button onclick="loadTaskForMe()">Refresh Task</button>
+</div>
+
+
 </div>
 
 <script src="script.js"></script>

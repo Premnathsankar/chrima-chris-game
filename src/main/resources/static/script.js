@@ -1,4 +1,7 @@
 // ADMIN
+
+
+
 function startGame() {
     fetch(`/admin/startGame`, { method: "POST" })
         .then(res => res.text())
@@ -96,18 +99,107 @@ function deletePlayer(id) {
 }
 
 // USER
-function revealName() {
-    const phone = document.getElementById("userPhone").value;
 
-    fetch(`/game/reveal?phone=${phone}`, { method: "POST" })
-        .then(res => res.text())
-        .then(result => {
-            document.getElementById("result").innerText = result;
-        });
-}
 
 window.onload = function () {
     if (window.location.pathname.includes("admin")) {
         loadPlayers();
     }
 };
+
+let currentPhone = "";
+let receiverName = "";
+
+function reveal() {
+    const phone = document.getElementById("userPhone").value.trim();
+    if (phone === "") {
+        alert("Enter phone number");
+        return;
+    }
+
+    currentPhone = phone;
+
+    fetch(`/game/reveal?phone=${phone}`, { method: "POST" })
+        .then(res => res.text())
+        .then(result => {
+            document.getElementById("revealResult").innerText = result;
+
+            // ✅ FIXED CONDITION (emoji-safe)
+            if (result.includes("You got:")) {
+                receiverName = result.split("You got:")[1].trim();
+
+                document.getElementById("assignTitle").innerText =
+                    `Assign a task for ${receiverName}`;
+
+                document.getElementById("taskAssignSection").classList.remove("hidden");
+                document.getElementById("taskForMeSection").classList.remove("hidden");
+
+                // ✅ LOAD BOTH TASK SECTIONS
+                loadTaskForMe();
+                loadMyAssignedTask();
+            }
+        });
+}
+
+
+
+
+
+// ASSIGN / EDIT TASK
+function assignTask() {
+    const task = document.getElementById("taskInput").value;
+
+    fetch(`/game/assignTask?giverPhone=${currentPhone}&task=${encodeURIComponent(task)}`, {
+        method: "POST"
+    })
+    .then(res => res.text())
+    .then(msg => {
+        document.getElementById("assignMsg").innerText = msg;
+    });
+}
+
+// VIEW TASK ASSIGNED TO ME
+function loadTaskForMe() {
+    fetch(`/game/viewTask?phone=${currentPhone}`)
+        .then(res => res.text())
+        .then(task => {
+            document.getElementById("taskForMeText").innerText = task;
+        });
+}
+
+
+function loadMyAssignedTask() {
+    fetch(`/game/myAssignedTask?phone=${currentPhone}`)
+        .then(res => res.text())
+        .then(task => {
+            document.getElementById("taskInput").value = task || "";
+        });
+}
+
+// ❄️ Snowfall Animation
+function createSnowflake() {
+    const snowContainer = document.querySelector(".snow-container");
+    if (!snowContainer) return;
+
+    const snowflake = document.createElement("div");
+    snowflake.classList.add("snowflake");
+	snowflake.innerHTML = '<i class="fa-solid fa-snowflake"></i>';
+
+
+    snowflake.style.left = Math.random() * window.innerWidth + "px";
+    snowflake.style.fontSize = Math.random() * 10 + 10 + "px";
+    snowflake.style.animationDuration = Math.random() * 5 + 5 + "s";
+    snowflake.style.opacity = Math.random();
+
+    snowContainer.appendChild(snowflake);
+
+    setTimeout(() => {
+        snowflake.remove();
+    }, 10000);
+}
+
+// create snowflakes continuously
+setInterval(createSnowflake, 50);
+
+
+

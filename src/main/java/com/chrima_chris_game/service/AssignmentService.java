@@ -53,10 +53,12 @@ public class AssignmentService {
 
         // save assignments
         for (int i = 0; i < players.size(); i++) {
-            Assignment assignment = new Assignment(
-                    players.get(i).getPhone(),
-                    shuffled.get(i).getName()
-            );
+        	Assignment assignment = new Assignment(
+        	        players.get(i).getPhone(),          // giver
+        	        shuffled.get(i).getPhone(),          // receiver phone ✅
+        	        shuffled.get(i).getName()            // receiver name
+        	);
+
             assignmentRepository.save(assignment);
         }
 
@@ -73,6 +75,46 @@ public class AssignmentService {
         playerRepository.deleteAll();
         return "Full game reset completed. All players and assignments removed.";
     }
+    
+ // Assign or update task for the person I got
+    public String assignTask(String giverPhone, String task) {
+
+        Assignment assignment = assignmentRepository
+                .findByGiverPhone(giverPhone)
+                .orElseThrow(() -> new IllegalStateException("Game not started yet"));
+
+
+        // ALLOW EMPTY -> overwrite allowed
+        assignment.setTaskForReceiver(task);
+        assignmentRepository.save(assignment);
+
+        return "Task assigned successfully";
+    }
+
+    public String viewTaskForMe(String myPhone) {
+
+        return assignmentRepository
+                .findByReceiverPhone(myPhone)
+                .map(a -> a.getTaskForReceiver() == null || a.getTaskForReceiver().isBlank()
+                        ? "No task assigned yet"
+                        : a.getTaskForReceiver())
+                .orElse("No task assigned yet");
+    }
+    
+    public String getTaskAssignedByMe(String giverPhone) {
+        System.out.println("Fetching task for giver: " + giverPhone);
+
+        return assignmentRepository
+                .findByGiverPhone(giverPhone)
+                .map(a -> {
+                    System.out.println("Task found: " + a.getTaskForReceiver());
+                    return a.getTaskForReceiver() == null ? "" : a.getTaskForReceiver();
+                })
+                .orElse("");
+    }
+
+
+
 
 
 }
